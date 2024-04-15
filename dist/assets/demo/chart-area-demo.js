@@ -6,7 +6,7 @@ Chart.defaults.global.defaultFontColor = '#292b2c';
 d3.csv("datalogs.csv").then(function(data) {
   // Parse the dates and convert the other columns to numbers
   data.forEach(function(datapoints) {
-    //datapoints.time = d3.timeParse("%m/%d/%Y %H:%M")(datapoints.time);
+    datapoints.time = d3.timeParse("%m/%d/%Y %H:%M:%S")(datapoints.time);
     datapoints.time = datapoints.time;
     datapoints.temperature = +datapoints.temperature;
     datapoints.humidity = +datapoints.humidity;
@@ -26,7 +26,7 @@ d3.csv("datalogs.csv").then(function(data) {
   var myLineChart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: labels,
+      labels: labels.map(function(time) { return d3.timeFormat("%m/%d/%Y %H:%M:%S")(time); }),
       datasets: [{
         label: "Temperature",
         lineTension: 0.3,
@@ -85,7 +85,7 @@ d3.csv("datalogs.csv").then(function(data) {
         pointHitRadius: 5,
         pointBorderWidth: 2,
         data: waterData,
-        hidden: true,
+        hidden: false,
       }],
     },
     options: {
@@ -93,13 +93,13 @@ d3.csv("datalogs.csv").then(function(data) {
         xAxes: [{
           time: {
             unit: 'string',
-            //parser: 'DD/MM/YYYY HH:mm'
+            //parser: 'DD/MM/YYYY HH:mm:ss'
           },
           gridLines: {
             display: false
           },
           ticks: {
-            maxTicksLimit: 40
+            maxTicksLimit: 60
           }
         }],
         yAxes: [{

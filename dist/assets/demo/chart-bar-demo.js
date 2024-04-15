@@ -6,8 +6,8 @@ Chart.defaults.global.defaultFontColor = '#292b2c';
 d3.csv("datalogs.csv").then(function(data) {
   // Parse the dates and convert the other columns to numbers
   data.forEach(function(datapoints) {
-    //datapoints.time = d3.timeParse("%m/%d/%Y %H:%M")(datapoints.time);
-    datapoints.time = datapoints.time;
+    datapoints.time = d3.timeParse("%m/%d/%Y %H:%M:%S")(datapoints.time);
+    //datapoints.time = datapoints.time;
     //datapoints.temperature = +datapoints.temperature;
     //datapoints.humidity = +datapoints.humidity;
     datapoints.water = +datapoints.water;
@@ -26,7 +26,7 @@ var ctx = document.getElementById("myBarChart");
 var myLineChart = new Chart(ctx, {
   type: 'bar',
   data: {
-    labels: labels.slice(-20), // Only take the last 10 labels
+    labels: labels.slice(-20).map(function(time) { return d3.timeFormat("%m/%d/%Y %H:%M:%S")(time); }),
     datasets: [{
     label: "Water Level",
     lineTension: 0.3,
@@ -60,7 +60,7 @@ var myLineChart = new Chart(ctx, {
     yAxes: [{
       ticks: {
       min: 0,
-      max: 3,
+      max: 10,
       maxTicksLimit: 30
       },
       gridLines: {
