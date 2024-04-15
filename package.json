@@ -39,14 +39,15 @@
         "url": "https://github.com/StartBootstrap/startbootstrap-sb-admin.git"
     },
     "dependencies": {
-        "bootstrap": "5.2.3"
+        "bootstrap": "5.2.3",
+        "chart.js": "^4.4.2"
     },
     "devDependencies": {
         "autoprefixer": "10.4.14",
-        "browser-sync": "2.29.1",
+        "browser-sync": "^3.0.2",
         "chokidar": "3.5.3",
         "concurrently": "6.3.0",
-        "postcss": "8.4.21",
+        "postcss": "^8.4.38",
         "prettier": "2.8.6",
         "pug": "3.0.2",
         "sass": "1.60.0",
