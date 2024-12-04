@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Plant Irrigation System</title>
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand ps-3" href="index.html">Plant Irrigation System</a>
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <a class="nav-link" href="index.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
+                        <a class="nav-link" href="settings.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            Settings
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Settings</h1>
+                    <form id="settingsForm">
+                        <div class="mb-3">
+                            <label for="maxLines" class="form-label">Max Lines</label>
+                            <input type="number" class="form-control" id="maxLines" name="maxLines" value="100">
+                        </div>
+                        <div class="mb-3">
+                            <label for="interval" class="form-label">Interval (ms)</label>
+                            <input type="number" class="form-control" id="interval" name="interval" value="1000">
+                        </div>
+                        <div class="mb-3">
+                            <label for="port" class="form-label">Port</label>
+                            <input type="number" class="form-control" id="port" name="port" value="3000">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="saveSettings()">Save</button>
+                        <button type="button" class="btn btn-secondary" onclick="cancelSettings()">Cancel</button>
+                        <button type="button" class="btn btn-danger" onclick="resetSettings()">Reset to
+                            Defaults</button>
+                    </form>
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Saint Cloud State University</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script>
+        // Add at the start of script
+        let serverPort;
+
+        // Add function to load config
+        async function loadConfig() {
+            try {
+                const response = await fetch('http://localhost:3000/config');
+                const config = await response.json();
+                serverPort = config.port;
+                document.getElementById('maxLines').value = config.maxLines;
+                document.getElementById('interval').value = config.interval;
+                document.getElementById('port').value = config.port;
+            } catch (error) {
+                console.error('Error loading config:', error);
+            }
+        }
+
+        // Call on page load
+        document.addEventListener('DOMContentLoaded', loadConfig);
+
+        // Update save function
+        function saveSettings() {
+            const maxLines = document.getElementById('maxLines').value;
+            const interval = document.getElementById('interval').value;
+            const port = document.getElementById('port').value;
+
+            const config = {
+                maxLines: parseInt(maxLines),
+                interval: parseInt(interval),
+                port: parseInt(port)
+            };
+
+            fetch(`http://localhost:${serverPort}/config`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(config)
+            }).then(response => {
+                if (response.ok) {
+                    alert('Settings saved successfully!');
+                    // Reload page to get new config
+                    window.location.reload();
+                } else {
+                    alert('Failed to save settings.');
+                }
+            }).catch(error => {
+                alert('Error: ' + error.message);
+            });
+        }
+        const defaultConfig = {
+            maxLines: 100,
+            interval: 1000,
+            port: 3000
+        };
+
+        function resetSettings() {
+            // First confirm with user
+            if (!confirm('Are you sure you want to reset all settings to defaults?')) {
+                return;
+            }
+
+            fetch(`http://localhost:${serverPort}/config`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(defaultConfig)
+            }).then(response => {
+                if (response.ok) {
+                    alert('Settings reset to defaults!');
+                    // Force page reload to fetch new config
+                    window.location.reload(true);
+                } else {
+                    alert('Failed to reset settings.');
+                }
+            }).catch(error => {
+                alert('Error: ' + error.message);
+            });
+        }
+    </script>
+</body>
+
+</html>
