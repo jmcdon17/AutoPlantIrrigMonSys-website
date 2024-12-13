@@ -14,11 +14,14 @@ function setCorsHeaders(res) {
 const HEADER = 'time,temperature,humidity,water,soilmoisture\n';
 const FILE_PATH = path.join(__dirname, 'datalogs.csv');
 const configPath = path.join(__dirname, 'config.json');
+const plantDatabasePath = path.join(__dirname, 'plantDatabase.csv');
+const PLANT_DB_HEADER = 'id,name,maxLines,interval,port,soilMoistureThreshold\n';
 
 // Variables from config
 let MAX_LINES = config.maxLines;
 let UPDATE_INTERVAL = config.interval;
 let PORT = config.port;
+let SOIL_MOISTURE_THRESHOLD = config.soilmoisturethreshold;
 
 // Helper functions
 function ensureHeaderExists(filePath, header, callback) {
@@ -26,7 +29,14 @@ function ensureHeaderExists(filePath, header, callback) {
         if (err) {
             fs.writeFile(filePath, header, callback);
         } else {
-            callback(null);
+            fs.readFile(filePath, 'utf8', (err, data) => {
+                if (err) return callback(err);
+                if (!data.startsWith(header)) {
+                    fs.writeFile(filePath, header + data, callback);
+                } else {
+                    callback(null);
+                }
+            });
         }
     });
 }
@@ -42,6 +52,33 @@ function limitFileSize(filePath, maxLines, callback) {
         } else {
             callback(null);
         }
+    });
+}
+
+function ensurePlantDatabaseExists(callback) {
+    fs.readFile(plantDatabasePath, 'utf8', (err, data) => {
+        if (err) {
+            if (err.code === 'ENOENT') {
+                // File does not exist, create it with the header
+                return fs.writeFile(plantDatabasePath, PLANT_DB_HEADER, callback);
+            } else {
+                return callback(err);
+            }
+        }
+
+        const lines = data.split('\n').filter(line => line.trim() !== '');
+        if (!lines[0].startsWith('id,name,maxLines,interval,port,soilMoistureThreshold')) {
+            // Add header if missing
+            const newData = [PLANT_DB_HEADER].concat(lines).join('\n') + '\n';
+            return fs.writeFile(plantDatabasePath, newData, callback);
+        }
+
+        // Remove any duplicate headers
+        const filteredLines = lines.filter((line, index) => {
+            return index === 0 || !line.startsWith('id,name,maxLines,interval,port,soilMoistureThreshold');
+        });
+        const newData = filteredLines.join('\n') + '\n';
+        fs.writeFile(plantDatabasePath, newData, callback);
     });
 }
 
@@ -101,9 +138,17 @@ const server = http.createServer((req, res) => {
                     MAX_LINES = newConfig.maxLines;
                     UPDATE_INTERVAL = newConfig.interval;
                     PORT = newConfig.port;
+                    SOIL_MOISTURE_THRESHOLD = newConfig.soilmoisturethreshold;
 
-                    res.writeHead(200);
-                    res.end('Settings saved successfully');
+                    limitFileSize(FILE_PATH, MAX_LINES, (err) => {
+                        if (err) {
+                            console.error('Error limiting file size:', err);
+                            res.writeHead(500);
+                            return res.end('Internal Server Error');
+                        }
+                        res.writeHead(200);
+                        res.end('Settings saved successfully');
+                    });
                 });
             } catch (err) {
                 console.error('Error parsing configuration:', err);
@@ -114,6 +159,50 @@ const server = http.createServer((req, res) => {
     } else if (req.method === 'GET' && req.url === '/config') {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(config));
+    } else if (req.method === 'POST' && req.url === '/addPlant') {
+        let body = '';
+        req.on('data', chunk => body += chunk.toString());
+        req.on('end', () => {
+            try {
+                const newPlant = JSON.parse(body);
+                ensurePlantDatabaseExists((err) => {
+                    if (err) {
+                        console.error('Error ensuring plant database:', err);
+                        res.writeHead(500);
+                        return res.end('Internal Server Error');
+                    }
+
+                    fs.readFile(plantDatabasePath, 'utf8', (err, data) => {
+                        if (err) {
+                            console.error('Error reading plant database:', err);
+                            res.writeHead(500);
+                            return res.end('Internal Server Error');
+                        }
+
+                        const rows = data.trim().split('\n');
+                        const lastRow = rows[rows.length - 1];
+                        const lastId = parseInt(lastRow.split(',')[0]);
+                        const newId = lastId + 1;
+
+                        const newRow = `${newId},${newPlant.name},${newPlant.maxLines},${newPlant.interval},${newPlant.port},${newPlant.soilmoisturethreshold}\n`;
+                        fs.appendFile(plantDatabasePath, newRow, (err) => {
+                            if (err) {
+                                console.error('Error writing to plant database:', err);
+                                res.writeHead(500);
+                                return res.end('Internal Server Error');
+                            }
+
+                            res.writeHead(200);
+                            res.end('Plant added successfully');
+                        });
+                    });
+                });
+            } catch (err) {
+                console.error('Error parsing plant data:', err);
+                res.writeHead(400);
+                res.end('Invalid plant data');
+            }
+        });
     } else {
         res.writeHead(404);
         res.end('Not Found');

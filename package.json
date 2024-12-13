@@ -40,7 +40,9 @@
     },
     "dependencies": {
         "bootstrap": "5.2.3",
-        "chart.js": "^4.4.2"
+        "chart.js": "^4.4.2",
+        "express": "^4.19.2",
+        "node": "^18.20.2"
     },
     "devDependencies": {
         "autoprefixer": "10.4.14",

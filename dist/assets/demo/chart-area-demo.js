@@ -63,7 +63,7 @@ fetch('config.json')
 
       // Create chart instances
       var ctxTemp = document.getElementById("temperatureChart").getContext("2d");
-      var temperatureChart = createChart(ctxTemp, "Temperature (C)", { labels: labels, values: tempData }, "rgba(153,102,255,0.2)", "rgba(153,102,255,1)", 100);
+      var temperatureChart = createChart(ctxTemp, "Temperature (F)", { labels: labels, values: tempData }, "rgba(153,102,255,0.2)", "rgba(153,102,255,1)", 100);
 
       var ctxHumidity = document.getElementById("humidityChart").getContext("2d");
       var humidityChart = createChart(ctxHumidity, "Relative Humidity (percent)", { labels: labels, values: humidityData }, "rgba(75,192,192,0.2)", "rgba(75,192,192,1)", 100);

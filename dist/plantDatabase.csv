@@ -1,0 +1,7 @@
+id,name,maxLines,interval,port,soilMoistureThreshold
+1,Sunflower,200,1500,3000,35
+2,Rosemary,100,1000,3000,38
+3,Basil,120,1000,3000,39
+4,Thyme,130,1000,3000,36
+5,Sage,300,1000,3000,33
+6,Juniper,250,1000,3000,32

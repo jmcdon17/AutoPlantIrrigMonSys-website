@@ -12,12 +12,15 @@
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand ps-3" href="index.html">Plant Irrigation System</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+                class="fas fa-bars"></i></button>
     </nav>
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
                         <a class="nav-link" href="index.html">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
@@ -37,20 +40,67 @@
                     <form id="settingsForm">
                         <div class="mb-3">
                             <label for="maxLines" class="form-label">Max Lines</label>
-                            <input type="number" class="form-control" id="maxLines" name="maxLines" value="100">
+                            <input type="number" class="form-control" id="maxLines" name="maxLines">
                         </div>
                         <div class="mb-3">
                             <label for="interval" class="form-label">Interval (ms)</label>
-                            <input type="number" class="form-control" id="interval" name="interval" value="1000">
+                            <input type="number" class="form-control" id="interval" name="interval">
                         </div>
                         <div class="mb-3">
                             <label for="port" class="form-label">Port</label>
-                            <input type="number" class="form-control" id="port" name="port" value="3000">
+                            <input type="number" class="form-control" id="port" name="port">
+                        </div>
+                        <div class="mb-3">
+                            <label for="soilmoisturethreshold" class="form-label">Soil Moisture Threshold</label>
+                            <input type="number" class="form-control" id="soilmoisturethreshold"
+                                name="soilmoisturethreshold">
                         </div>
                         <button type="button" class="btn btn-primary" onclick="saveSettings()">Save</button>
                         <button type="button" class="btn btn-secondary" onclick="cancelSettings()">Cancel</button>
                         <button type="button" class="btn btn-danger" onclick="resetSettings()">Reset to
                             Defaults</button>
+                    </form>
+                    <h2 class="mt-4">Plant Configurations</h2>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Max Lines</th>
+                                <th>Interval</th>
+                                <th>Port</th>
+                                <th>Soil Moisture Threshold</th>
+                            </tr>
+                        </thead>
+                        <tbody id="plantTableBody">
+                            <!-- Plant configurations will be loaded here -->
+                        </tbody>
+                    </table>
+                    <h2 class="mt-4">Add New Plant Configuration</h2>
+                    <form id="addPlantForm">
+                        <div class="mb-3">
+                            <label for="plantName" class="form-label">Plant Name</label>
+                            <input type="text" class="form-control" id="plantName" name="plantName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="plantMaxLines" class="form-label">Max Lines</label>
+                            <input type="number" class="form-control" id="plantMaxLines" name="plantMaxLines" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="plantInterval" class="form-label">Interval (ms)</label>
+                            <input type="number" class="form-control" id="plantInterval" name="plantInterval" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="plantPort" class="form-label">Port</label>
+                            <input type="number" class="form-control" id="plantPort" name="plantPort" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="plantSoilMoistureThreshold" class="form-label">Soil Moisture Threshold</label>
+                            <input type="number" class="form-control" id="plantSoilMoistureThreshold"
+                                name="plantSoilMoistureThreshold" required>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="addPlant()">Add Plant</button>
                     </form>
                 </div>
             </main>
@@ -69,10 +119,8 @@
         </div>
     </div>
     <script>
-        // Add at the start of script
         let serverPort;
 
-        // Add function to load config
         async function loadConfig() {
             try {
                 const response = await fetch('http://localhost:3000/config');
@@ -81,24 +129,82 @@
                 document.getElementById('maxLines').value = config.maxLines;
                 document.getElementById('interval').value = config.interval;
                 document.getElementById('port').value = config.port;
+                document.getElementById('soilmoisturethreshold').value = config.soilmoisturethreshold;
             } catch (error) {
                 console.error('Error loading config:', error);
             }
         }
 
-        // Call on page load
-        document.addEventListener('DOMContentLoaded', loadConfig);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadConfig();
+            loadPlantDatabase();
+        });
 
-        // Update save function
+        async function loadPlantDatabase() {
+            try {
+                const response = await fetch('plantDatabase.csv');
+                const data = await response.text();
+                const rows = data.trim().split('\n').slice(1);
+                const tableBody = document.getElementById('plantTableBody');
+                tableBody.innerHTML = '';
+
+                rows.forEach(row => {
+                    const cols = row.split(',');
+                    const tr = document.createElement('tr');
+
+                    // Create radio button cell
+                    const radioTd = document.createElement('td');
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = 'plantSelect';
+
+                    // Format the settings object correctly
+                    const settings = {
+                        maxLines: parseInt(cols[2]),
+                        interval: parseInt(cols[3]),
+                        port: parseInt(cols[4]),
+                        soilmoisturethreshold: parseInt(cols[5])
+                    };
+
+                    radio.value = JSON.stringify(settings);
+                    radio.onclick = () => loadPlantSettings(radio.value);
+
+                    radioTd.appendChild(radio);
+                    tr.appendChild(radioTd);
+
+                    // Add the rest of the columns
+                    cols.forEach(col => {
+                        const td = document.createElement('td');
+                        td.textContent = col;
+                        tr.appendChild(td);
+                    });
+
+                    tableBody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Error loading plant database:', error);
+            }
+        }
+
+        function loadPlantSettings(settings) {
+            const config = JSON.parse(settings);
+            document.getElementById('maxLines').value = config.maxLines;
+            document.getElementById('interval').value = config.interval;
+            document.getElementById('port').value = config.port;
+            document.getElementById('soilmoisturethreshold').value = config.soilmoisturethreshold;
+        }
+
         function saveSettings() {
             const maxLines = document.getElementById('maxLines').value;
             const interval = document.getElementById('interval').value;
             const port = document.getElementById('port').value;
+            const soilmoisturethreshold = document.getElementById('soilmoisturethreshold').value;
 
             const config = {
                 maxLines: parseInt(maxLines),
                 interval: parseInt(interval),
-                port: parseInt(port)
+                port: parseInt(port),
+                soilmoisturethreshold: parseInt(soilmoisturethreshold)
             };
 
             fetch(`http://localhost:${serverPort}/config`, {
@@ -110,8 +216,7 @@
             }).then(response => {
                 if (response.ok) {
                     alert('Settings saved successfully!');
-                    // Reload page to get new config
-                    window.location.reload();
+                    //window.location.reload();
                 } else {
                     alert('Failed to save settings.');
                 }
@@ -119,14 +224,15 @@
                 alert('Error: ' + error.message);
             });
         }
+
         const defaultConfig = {
             maxLines: 100,
             interval: 1000,
-            port: 3000
+            port: 3000,
+            soilmoisturethreshold: 38
         };
 
         function resetSettings() {
-            // First confirm with user
             if (!confirm('Are you sure you want to reset all settings to defaults?')) {
                 return;
             }
@@ -140,10 +246,46 @@
             }).then(response => {
                 if (response.ok) {
                     alert('Settings reset to defaults!');
-                    // Force page reload to fetch new config
                     window.location.reload(true);
                 } else {
                     alert('Failed to reset settings.');
+                }
+            }).catch(error => {
+                alert('Error: ' + error.message);
+            });
+        }
+
+        function cancelSettings() {
+            window.location.href = 'index.html';
+        }
+
+        function addPlant() {
+            const plantName = document.getElementById('plantName').value;
+            const plantMaxLines = document.getElementById('plantMaxLines').value;
+            const plantInterval = document.getElementById('plantInterval').value;
+            const plantPort = document.getElementById('plantPort').value;
+            const plantSoilMoistureThreshold = document.getElementById('plantSoilMoistureThreshold').value;
+
+            const newPlant = {
+                name: plantName,
+                maxLines: parseInt(plantMaxLines),
+                interval: parseInt(plantInterval),
+                port: parseInt(plantPort),
+                soilmoisturethreshold: parseInt(plantSoilMoistureThreshold)
+            };
+
+            fetch(`http://localhost:${serverPort}/addPlant`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newPlant)
+            }).then(response => {
+                if (response.ok) {
+                    alert('Plant added successfully!');
+                    window.location.reload();
+                } else {
+                    alert('Failed to add plant.');
                 }
             }).catch(error => {
                 alert('Error: ' + error.message);
