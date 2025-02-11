@@ -20,7 +20,7 @@ Code is forked and modified from [Start Bootstrap - SB Admin](https://startboots
 
 ![1739249940117](image/README/1739249940117.png)
 
-**[View Live Preview](https://startbootstrap.github.io/startbootstrap-sb-admin/)**
+**[View Live Preview](https://jmcdon17.github.io/AutoPlantIrrigMonSys-website/dist/)**
 
 To begin using this template, choose one of the following options to get started:
 
