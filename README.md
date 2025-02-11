@@ -1,32 +1,50 @@
-# [Start Bootstrap - SB Admin](https://startbootstrap.com/template/sb-admin/)
+# Automated Indoor Plant Irrigation System
 
-[SB Admin](https://startbootstrap.com/template/sb-admin/) is an open source, admin dashboard template for [Bootstrap](https://getbootstrap.com/) created by [Start Bootstrap](https://startbootstrap.com/).
+The objective for this project is to design and implement an Automated Indoor Plant Irrigation System to meet the irrigation and monitoring needs of home plant growers for maintaining the optimal moisture levels of their indoor plants. The system incorporates a server, microcontroller, temperature sensor, relative humidity sensor, soil moisture sensor, three water level sensors, two water pumps, two water reservoirs, tubing, and a power supply. The software aspects include a database of environmental logs, database of plant types, current configuration settings file, and a GUI website which is hosted on a server and accessible on mobile and desktop. Our approach will reduce the risk of overwatering or underwatering plants and provides peace of mind should the owner be away for periods of time. The data logs provide environmental information for observation of the plants’ soil moisture, temperature, humidity level, water level of the reservoir. Overall, this project aims to provide a comprehensive automated solution for indoor plant watering.
+
+Code is forked and modified from [Start Bootstrap - SB Admin](https://startbootstrap.com/template/sb-admin/). [SB Admin](https://startbootstrap.com/template/sb-admin/) is an open source, admin dashboard template for [Bootstrap](https://getbootstrap.com/) created by [Start Bootstrap](https://startbootstrap.com/).
 
 ## Preview
 
-[![SB Admin Preview](https://assets.startbootstrap.com/img/screenshots/templates/sb-admin.png)](https://startbootstrap.github.io/startbootstrap-sb-admin/)
+### Dashboard
+
+![1739249910950](image/README/1739249910950.png)
+
+![1739249915349](image/README/1739249915349.png)
+
+![1739249925332](image/README/1739249925332.png)
+
+### Settings
+
+![1739249935731](image/README/1739249935731.png)
+
+![1739249940117](image/README/1739249940117.png)
 
 **[View Live Preview](https://startbootstrap.github.io/startbootstrap-sb-admin/)**
+
+To begin using this template, choose one of the following options to get started:
 
 ## Status
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/StartBootstrap/startbootstrap-sb-admin/master/LICENSE)
-[![npm version](https://img.shields.io/npm/v/startbootstrap-sb-admin.svg)](https://www.npmjs.com/package/startbootstrap-sb-admin)
+
+## Dependencies
+
+bootstrap: v5.2.3
+chart.js: v4.4.2
+express: v4.19.2
+node.js: v18.20.2
 
 ## Download and Installation
 
-To begin using this template, choose one of the following options to get started:
-
-* [Download the latest release on Start Bootstrap](https://startbootstrap.com/template/sb-admin/)
-* Install via npm: `npm i startbootstrap-sb-admin`
-* Clone the repo: `git clone https://github.com/StartBootstrap/startbootstrap-sb-admin.git`
-* [Fork, Clone, or Download on GitHub](https://github.com/StartBootstrap/startbootstrap-sb-admin)
+* Clone the repo: `git clone https://github.com/jmcdon17/AutoPlantIrrigMonSys-website.git`
+* [Fork, Clone, or Download on GitHub](https://github.com/jmcdon17/AutoPlantIrrigMonSys-website)
 
 ## Usage
 
 ### Basic Usage
 
-After downloading, simply edit the HTML and CSS files included with `dist` directory. These are the only files you need to worry about, you can ignore everything else! To preview the changes you make to the code, you can open the `index.html` file in your web browser.
+After downloading, simply edit the HTML and CSS files included with `dist` directory. These are the only files yu need to worry about, you can ignore everything else! To preview the changes you make to the code, you can open the `index.html` file in your web browser.
 
 ### Advanced Usage
 
@@ -45,29 +63,33 @@ Clone the source files of the theme and navigate into the theme's root directory
 
 You must have npm installed in order to use this build environment.
 
-## Bugs and Issues
-
-Have a bug or an issue with this template? [Open a new issue](https://github.com/StartBootstrap/startbootstrap-sb-admin/issues) here on GitHub or leave a comment on the [template overview page at Start Bootstrap](https://startbootstrap.com/template/sb-admin/).
-
-## Custom Builds
-
-You can hire Start Bootstrap to create a custom build of any template, or create something from scratch using Bootstrap. For more information, visit the **[custom design services page](https://startbootstrap.com/bootstrap-design-services/)**.
-
 ## About
 
-Start Bootstrap is an open source library of free Bootstrap templates and themes. All of the free templates and themes on Start Bootstrap are released under the MIT license, which means you can use them for any purpose, even for commercial projects.
+### Automated Indoor Plant Irrigation System
 
-* <https://startbootstrap.com>
-* <https://twitter.com/SBootstrap>
+Automated Indoor Plant Irrigation System was created by and is maintained by:
 
-Start Bootstrap was created by and is maintained by **[David Miller](https://davidmiller.io/)**.
+* Justin McDonald
+* Kalid Ali
+* Benjamin Uecker
+* Duc Tran
 
-* <https://davidmiller.io>
-* <https://twitter.com/davidmillerhere>
-* <https://github.com/davidtmiller>
+In partial fulfillment of the requirements for the degree of Bachelor of Science in the Department of Electrical and Computer Engineering, St. Cloud State University, St. Cloud, MN.
+
+#### Senior Design Project Committee
+
+[Dr. Yi Zheng](https://web.stcloudstate.edu/zheng/) (advisor), [Dr. Aiping Yao](https://www.stcloudstate.edu/ece/faculty-staff.aspx), [Dr. Andrew A. Anda](https://www.stcloudstate.edu/csit/faculty-staff.aspx)
+
+Automated Indoor Plant Irrigation System is based on the framework Start Bootstrap.
+
+### Start Bootstrap
+
+* [https://davidmiller.io](https://davidmiller.io)
+* [https://twitter.com/davidmillerhere](https://twitter.com/davidmillerhere)
+* [https://github.com/davidtmiller](https://github.com/davidtmiller)
 
 Start Bootstrap is based on the [Bootstrap](https://getbootstrap.com/) framework created by [Mark Otto](https://twitter.com/mdo) and [Jacob Thorton](https://twitter.com/fat).
 
 ## Copyright and License
 
-Copyright 2013-2023 Start Bootstrap LLC. Code released under the [MIT](https://github.com/StartBootstrap/startbootstrap-sb-admin/blob/master/LICENSE) license.
+Copyright 2013-2025 Saint Cloud State University. Code released under the [MIT](https://github.com/StartBootstrap/startbootstrap-sb-admin/blob/master/LICENSE) license.
