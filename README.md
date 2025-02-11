@@ -10,19 +10,59 @@ Code is forked and modified from [Start Bootstrap - SB Admin](https://startboots
 
 ![1739249910950](image/README/1739249910950.png)
 
+Figure 1: Temperature and humidity monitoring charts.
+
 ![1739249915349](image/README/1739249915349.png)
+
+Figure 2: Water level and soil moisture monitoring charts.
 
 ![1739249925332](image/README/1739249925332.png)
 
-### Settings
+Figure 3: Water level bar and pie charts.
+
+## Configuration Settings
 
 ![1739249935731](image/README/1739249935731.png)
 
+FIgure 4: Plant database and settings.
+
 ![1739249940117](image/README/1739249940117.png)
+
+Figure 5: Screen for adding new entries to the plant database.
+
+### Configuration File (`config.json`)
+
+The `config.json` file contains settings that define and control the system's behavior. These settings are synchronized with the microcontroller and include the following:
+
+- **Max Lines**: Specifies the maximum number of entries allowed in the logs database (`datalogs.csv`).
+- **Interval (ms)**: Defines the data sampling frequency, measured in milliseconds, determining how frequently the system collects a sample.
+- **Port**: Specifies the port number on which the HTTP server listens for incoming requests.
+- **Soil Moisture Threshold**: Sets the minimum moisture level required to activate the water pump and begin watering the soil, ensuring plants are watered only when needed.
 
 **[View Live Preview](https://jmcdon17.github.io/AutoPlantIrrigMonSys-website/dist/)**
 
-To begin using this template, choose one of the following options to get started:
+## Product Design and Hardware Pictures
+
+![1743612417517](image/README/1743612417517.jpg)
+
+Figure 6: Complete implementation of system.
+
+From right to left:
+
+* Mobile GUI shown on the far right.
+* Backup water reservoir.
+* Main water reservoir with sensors.
+* System housing unit.
+* Plant with connected sensors on the far left.
+
+![1743614517669](image/README/1743614517669.jpg)
+
+Figure 7: Chassis featuring PCB and pumps.
+
+* Top right: Buck converter and power input.
+* Bottom left: Relay module for controlling pumps.
+* Top left: ESP32 microcontroller with temperature and relative humidity sensor, water, and relative humidity sensor connections.
+* Far left: Pumps for the main and backup water reservoirs.
 
 ## Dependencies
 
@@ -32,6 +72,8 @@ express: v4.19.2
 node.js: v18.20.2
 
 ## Download and Installation
+
+To begin using this code, choose one of the following options to get started:
 
 * Clone the repo: `git clone https://github.com/jmcdon17/AutoPlantIrrigMonSys-website.git`
 * [Fork, Clone, or Download on GitHub](https://github.com/jmcdon17/AutoPlantIrrigMonSys-website)
@@ -88,4 +130,4 @@ Start Bootstrap is based on the [Bootstrap](https://getbootstrap.com/) framework
 
 ## Copyright and License
 
-Copyright 2013-2025 Saint Cloud State University. Code released under the [MIT](https://github.com/StartBootstrap/startbootstrap-sb-admin/blob/master/LICENSE) license.
+Copyright 2013-2025 Saint Cloud State University. Code released under the MIT license.
