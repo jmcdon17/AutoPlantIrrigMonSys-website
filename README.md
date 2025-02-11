@@ -88,4 +88,4 @@ Start Bootstrap is based on the [Bootstrap](https://getbootstrap.com/) framework
 
 ## Copyright and License
 
-Copyright 2013-2025 Saint Cloud State University. Code released under the [MIT](https://github.com/StartBootstrap/startbootstrap-sb-admin/blob/master/LICENSE) license.
+Copyright 2013-2025 Saint Cloud State University. Code released under the MIT license.
