@@ -24,10 +24,6 @@ Code is forked and modified from [Start Bootstrap - SB Admin](https://startboots
 
 To begin using this template, choose one of the following options to get started:
 
-## Status
-
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/StartBootstrap/startbootstrap-sb-admin/master/LICENSE)
-
 ## Dependencies
 
 bootstrap: v5.2.3
